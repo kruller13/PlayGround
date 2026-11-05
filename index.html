@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <meta name="theme-color" content="#06070d" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="description" content="Evolution Gate Shooter — an action gate-runner where every kill rewrites reality. Built for Android in vertical mode." />
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <link rel="icon" href="./icon.svg" type="image/svg+xml" />
+    <title>Evolution Gate Shooter</title>
+  </head>
+  <body>
+    <div id="app" data-era="0">
+      <canvas id="stage" aria-label="Evolution Gate Shooter game canvas"></canvas>
+      <div class="atmosphere" aria-hidden="true"></div>
+      <div id="flash" class="flash" aria-hidden="true"></div>
+
+      <section id="menu" class="screen menu">
+        <div class="menu-top">
+          <div class="brand">
+            <span class="brand-mark"><i></i><i></i><i></i></span>
+            <span class="brand-text">EVOLUTION<br /><b>GATE SHOOTER</b></span>
+          </div>
+          <div class="menu-top-actions">
+            <span class="live-pill"><i></i> LIVE BUILD 1.0</span>
+            <button id="soundBtn" class="icon-btn" aria-label="Toggle audio" title="Audio">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4zm12.5 3a4.5 4.5 0 0 0-2-3.74v7.48A4.5 4.5 0 0 0 16.5 12zm-2-7.2v2.06a7 7 0 0 1 0 10.28v2.06a9 9 0 0 0 0-14.4z"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="menu-copy">
+          <div class="eyebrow"><span class="pulse-dot"></span> EVOLUTION PROTOCOL <b>//</b> ACTIVE</div>
+          <h1><span>EVOLUTION</span><em>GATE</em></h1>
+          <div class="title-rule"><span></span><strong>SHOOTER</strong><span></span></div>
+          <p class="tagline">Kill. Adapt. Transcend.<br />Every battle rewrites reality.</p>
+        </div>
+
+        <div class="menu-bottom">
+          <div class="run-stats">
+            <div><span>BEST SCORE</span><strong id="bestScore">000000</strong></div>
+            <div><span>EVO CORES</span><strong id="coresStat">0</strong></div>
+            <div><span>RUNS</span><strong id="runsStat">0</strong></div>
+          </div>
+
+          <button id="playBtn" class="cta" aria-label="Play">
+            <span class="cta-shine"></span>
+            <span class="cta-label">PLAY</span>
+            <span class="cta-sub">BEGIN ASCENSION <b>›</b></span>
+          </button>
+
+          <div class="menu-actions">
+            <button id="labBtn" class="ghost-btn"><span>◈</span> EVOLUTION LAB</button>
+            <button id="codexBtn" class="ghost-btn"><span>▣</span> ERA CODEX</button>
+          </div>
+          <div class="era-strip" id="eraStrip"></div>
+        </div>
+      </section>
+
+      <section id="hud" class="screen hud hidden" aria-live="polite">
+        <div class="hud-top">
+          <div class="hp-card">
+            <div class="hp-copy"><span>INTEGRITY</span><strong id="hpText">100</strong></div>
+            <div class="hp-bar"><i id="hpFill"></i><b id="shieldFill"></b></div>
+            <div class="hp-shield"><span>SHIELD</span><i><b id="shieldPipFill"></b></i></div>
+          </div>
+          <button id="pauseBtn" class="pause-btn" aria-label="Pause game"><i></i><i></i></button>
+          <div class="score-card">
+            <span>SCORE</span>
+            <strong id="scoreText">000000</strong>
+            <em id="multiplier">×1.0</em>
+          </div>
+        </div>
+
+        <div class="evo-card">
+          <div class="evo-copy">
+            <span id="eraLabel">ERA I · STICKMAN</span>
+            <b id="evoPct">0%</b>
+          </div>
+          <div class="evo-track" id="evoTrack"></div>
+        </div>
+
+        <div class="sector-row">
+          <span id="sectorLabel">SECTOR 01</span>
+          <i></i>
+          <span id="killText">0 KILLS</span>
+        </div>
+
+        <div id="bossHud" class="boss-hud hidden">
+          <div class="boss-copy"><span id="bossName">THE GATEKEEPER</span><b>BOSS</b></div>
+          <div class="boss-bar"><i id="bossFill"></i></div>
+        </div>
+
+        <div class="controls">
+          <button id="leftBtn" class="steer" aria-label="Move left">‹</button>
+          <div class="drag-chip"><span>‹</span> DRAG TO MOVE <span>›</span></div>
+          <button id="rightBtn" class="steer" aria-label="Move right">›</button>
+        </div>
+        <div id="hint" class="hint hidden">AUTO-FIRE ONLINE</div>
+        <div id="powerRail" class="power-rail"></div>
+      </section>
+
+      <div id="floaters" class="floaters" aria-hidden="true"></div>
+
+      <div id="evolveOverlay" class="evolve-overlay hidden" aria-hidden="true">
+        <div class="evo-scan"></div>
+        <div class="evo-burst"></div>
+        <div class="evo-content">
+          <span id="evoKicker">EVOLUTION 02</span>
+          <h2 id="evoTitle">GEOMETRIC WORLD</h2>
+          <div class="evo-line"><i></i></div>
+          <p id="evoSub">Reality reorganizes into pure form.</p>
+        </div>
+      </div>
+
+      <div id="pauseOverlay" class="overlay hidden">
+        <div class="modal pause-modal">
+          <div class="modal-kicker">SIMULATION PAUSED</div>
+          <h2>HOLD THE LINE</h2>
+          <p>The gate remembers where you stopped.</p>
+          <button id="resumeBtn" class="solid-btn" aria-label="Resume">RESUME</button>
+          <button id="quitBtn" class="ghost-btn wide">ABANDON RUN</button>
+        </div>
+      </div>
+
+      <div id="labOverlay" class="overlay hidden">
+        <div class="modal lab-modal">
+          <button class="modal-close" data-close="labOverlay" aria-label="Close">×</button>
+          <div class="modal-kicker">PERMANENT GENOME</div>
+          <h2>EVOLUTION LAB</h2>
+          <p class="modal-desc">Spend Evo Cores on permanent strands. They persist across every ascension.</p>
+          <div class="lab-cores">◈ <b id="labCores">0</b> CORES</div>
+          <div id="labList" class="lab-list"></div>
+        </div>
+      </div>
+
+      <div id="codexOverlay" class="overlay hidden">
+        <div class="modal codex-modal">
+          <button class="modal-close" data-close="codexOverlay" aria-label="Close">×</button>
+          <div class="modal-kicker">VISUAL EVOLUTION ARCHIVE</div>
+          <h2>ERA CODEX</h2>
+          <p class="modal-desc">Six states of reality. One continuous ascent.</p>
+          <div id="codexList" class="codex-list"></div>
+        </div>
+      </div>
+
+      <div id="resultOverlay" class="overlay hidden">
+        <div class="modal result-modal">
+          <div id="resultKicker" class="modal-kicker">SIGNAL LOST</div>
+          <h2 id="resultTitle">RUN ENDED</h2>
+          <p id="resultSub" class="modal-desc">The gate consumed your signal.</p>
+          <div class="result-score"><span>FINAL SCORE</span><strong id="resultScore">0</strong><em id="resultBest">NEW BEST</em></div>
+          <div class="result-grid">
+            <div><span>KILLS</span><b id="resultKills">0</b></div>
+            <div><span>ERA</span><b id="resultEra">I</b></div>
+            <div><span>CORES</span><b id="resultCores">+0</b></div>
+          </div>
+          <button id="retryBtn" class="solid-btn" aria-label="Retry">ASCEND AGAIN</button>
+          <button id="homeBtn" class="ghost-btn wide">RETURN TO GATE</button>
+        </div>
+      </div>
+
+      <div id="rotateNotice" class="rotate-notice">
+        <span>◧</span>
+        <b>BEST IN PORTRAIT</b>
+        <p>Evolution Gate Shooter is designed for vertical play.</p>
+      </div>
+    </div>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
